@@ -30,9 +30,9 @@ function Traininglist() {
         valueFormatter: function (params){
             return moment (params.value).format ('DD-MM-YYYY');
         }}, 
-        {field: 'duration', sortable: true, filter: true },
-        { field: 'activity', sortable: true, filter: true },
-        { field: 'customer.firstname', sortable: true, filter: true },
+        { field: 'duration', sortable: true, filter: true },
+        { field: 'activity', sortable: true, filter: true },  
+        { field: 'customer.firstname',sortable: true, filter: true },
         { field: 'customer.lastname', sortable: true, filter: true }
     ]
 
