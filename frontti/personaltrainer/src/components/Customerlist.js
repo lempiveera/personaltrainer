@@ -6,6 +6,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 import AddCustomer from './AddCustomer';
 import EditCustomer from './EditCustomer';
+import AddTraining from './AddTraining';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
@@ -57,7 +58,6 @@ function Customerlist() {
         })
         .then(_ => {
             fetchCustomers();
-            console.log(url);
             setMsg('Customer Updated');
             openSnackBar();
         })
@@ -81,9 +81,24 @@ function Customerlist() {
         }
     }
 
+    const addTraining = (newTraining) => {
+        fetch('https://customerrest.herokuapp.com/api/trainings',
+        {
+            method: 'POST',
+            body: JSON.stringify(newTraining), //WHAT HERE WHY AM I SO DUMB :<
+            headers: { 'Content-type': 'application/json'}
+        })
+        .then(_ => { 
+            fetchCustomers()
+            setMsg('Training Added')
+            openSnackBar();
+        }) 
+        .catch(err => console.error(err))
+    }
+
     const columns = [
         { field: 'firstname', sortable: true, filter: true, width: 150},
-        { field: 'lastname', sortable: true, filter: true },
+        { field: 'lastname', sortable: true, filter: true, width: 150 },
         { field: 'streetaddress', sortable: true, filter: true },
         { field: 'postcode', sortable: true, filter: true, width: 130},
         { field: 'city', sortable: true, filter: true, width: 130},
@@ -104,7 +119,16 @@ function Customerlist() {
                 <IconButton color="secondary" onClick={() => deleteCustomer(params.value)}>
                     <DeleteIcon />
                 </IconButton>
-        }
+        },
+        { 
+            headerName: '',
+            field: 'links.2.href' && 'links.0.href', 
+            width: 200,
+            cellRendererFramework: params => 
+                <AddTraining 
+                    link={params.value} training={params.data} addTraining={addTraining}
+                />
+         }
     ]
 
     return (

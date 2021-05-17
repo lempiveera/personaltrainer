@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import moment from 'moment';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Snackbar from '@material-ui/core/Snackbar';
 
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -10,18 +13,44 @@ import 'ag-grid-community/dist/styles/ag-theme-material.css';
 
 function Traininglist() {
     const [trainings, setTrainings] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [msg, setMsg] = useState('');
+
 
     useEffect(() => {
         fetchTrainings();
     }, []);
 
-    //TODO HOW TO DEAL FETCHING TRAININGS? WITH GET METHOD?
+    const openSnackBar = () => {
+        setOpen(true);
+    }
+
+    const closeSnackBar = () => {
+        setOpen(false);
+    }
 
     const fetchTrainings = () => {
         fetch('https://customerrest.herokuapp.com/gettrainings')
             .then(response => response.json())
             .then(data => setTrainings(data))
             .catch(err => console.error(err))
+    }
+    
+    const deleteTraining = (id) => {
+        if (window.confirm('Are you sure?')) {
+            fetch(`https://customerrest.herokuapp.com/api/trainings/${id}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        fetchTrainings();
+                        setMsg('Training deleted');
+                        openSnackBar();
+                    }
+                    else {
+                        alert('something went wrong in deletion');
+                    }
+                })
+                .catch(err => console.error(err))
+        }
     }
 
     const columns = [
@@ -33,7 +62,16 @@ function Traininglist() {
         { field: 'duration', sortable: true, filter: true },
         { field: 'activity', sortable: true, filter: true },  
         { field: 'customer.firstname',sortable: true, filter: true },
-        { field: 'customer.lastname', sortable: true, filter: true }
+        { field: 'customer.lastname', sortable: true, filter: true },
+        {
+            headerName: '',
+            field: 'id',
+            width: 100,
+            cellRendererFramework: params =>
+                <IconButton color="secondary" onClick={() => deleteTraining(params.value)}>
+                    <DeleteIcon />
+                </IconButton>
+        },
     ]
 
     return (
@@ -48,6 +86,12 @@ function Traininglist() {
                     suppressCellSelection={true}
                 />
             </div>
+            <Snackbar 
+                open={open}
+                autoHideDuration={3000}
+                message={msg}
+                onClose={closeSnackBar}
+            />
         </div>
     )
 
