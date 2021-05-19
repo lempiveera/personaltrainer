@@ -107,14 +107,14 @@ function Customerlist() {
         {
             headerName: '',
             field: 'links.0.href',
-            width: 100,
+            width: 60,
             cellRendererFramework: params =>
                 <EditCustomer link={params.value} customer={params.data} updateCustomer={updateCustomer}/>
         },
         {
             headerName: '',
             field: 'links.0.href',
-            width: 100,
+            width: 60,
             cellRendererFramework: params =>
                 <IconButton color="secondary" onClick={() => deleteCustomer(params.value)}>
                     <DeleteIcon />
@@ -123,7 +123,7 @@ function Customerlist() {
         { 
             headerName: '',
             field: 'links.2.href' && 'links.0.href', 
-            width: 200,
+            width: 170,
             cellRendererFramework: params => 
                 <AddTraining 
                     link={params.value} training={params.data} addTraining={addTraining}

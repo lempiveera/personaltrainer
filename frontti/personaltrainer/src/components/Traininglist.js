@@ -57,9 +57,9 @@ function Traininglist() {
         {
         field: 'date', sortable: true, filter: true,
         valueFormatter: function (params){
-            return moment (params.value).format ('DD-MM-YYYY');
+            return moment (params.value).format ('DD-MM-YYYY, HH:MM');
         }}, 
-        { field: 'duration', sortable: true, filter: true },
+        { field: 'duration', sortable: true, filter: true, width: 150 },
         { field: 'activity', sortable: true, filter: true },  
         { field: 'customer.firstname',sortable: true, filter: true },
         { field: 'customer.lastname', sortable: true, filter: true },

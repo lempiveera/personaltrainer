@@ -5,13 +5,15 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-//import moment from 'moment';
+import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
+import DateFnsUtils from '@date-io/date-fns';
+
 
 function AddTraining(props) {
     
     const [open, setOpen] = React.useState(false);
     const [training, setTraining] = React.useState({
-        date: '',
+        date: null,
         duration: '', 
         activity: '',
         customer: props.link
@@ -27,12 +29,15 @@ function AddTraining(props) {
 
     const handleSave = () => {
         props.addTraining(training);
-        console.log(training);
         setOpen(false);
     }
 
     const inputChanged = (event) => {
         setTraining({...training, [event.target.name]: event.target.value});
+    }
+
+    const handleDateChange = (date) => {
+        setTraining({...training, date: date.toISOString() })
     }
 
     return (
@@ -43,14 +48,18 @@ function AddTraining(props) {
           <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">New Training </DialogTitle>
             <DialogContent>
-              <TextField
+            <MuiPickersUtilsProvider utils={DateFnsUtils} >
+            <DateTimePicker
                 margin="dense"
+                autoOk
+                ampm={false}
+                onChange={handleDateChange}
                 label="Date"
                 name="date"
                 value={training.date}
-                onChange={inputChanged}
                 fullWidth
-              />
+                />
+                </MuiPickersUtilsProvider>
               <TextField
                 margin="dense"
                 label="Duration"
